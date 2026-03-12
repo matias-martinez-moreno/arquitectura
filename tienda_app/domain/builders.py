@@ -5,6 +5,10 @@ from ..models import Orden
 
 
 class OrdenBuilder:
+    """
+    Patron Builder: construccion de la Orden paso a paso.
+    Evita un constructor gigante en el modelo y centraliza validacion y calculo.
+    """
     def __init__(self):
         self.reset()
 
@@ -16,7 +20,7 @@ class OrdenBuilder:
 
     def con_usuario(self, usuario):
         self._usuario = usuario
-        return self
+        return self  # Permite Fluent Interface
 
     def con_libro(self, libro):
         self._libro = libro
@@ -34,6 +38,7 @@ class OrdenBuilder:
         if not self._libro:
             raise ValueError("Datos insuficientes para crear la orden.")
 
+        # Encapsulamos la logica de calculo
         total_unitario = CalculadorImpuestos.obtener_total_con_iva(self._libro.precio)
         total = Decimal(total_unitario) * self._cantidad
 

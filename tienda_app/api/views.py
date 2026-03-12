@@ -36,7 +36,7 @@ class CompraAPIView(APIView):
             return Response(
                 {
                     'estado': 'exito',
-                    'mensaje': f'Orden creada. Total: {resultado}',
+                    'mensaje': f'Orden creada. Total: {float(resultado):.2f}',
                 },
                 status=status.HTTP_201_CREATED,
             )

@@ -17,7 +17,7 @@
         {% endif %}
 
         <h2>{{ libro.titulo }}</h2>
-        <p>Precio con IVA: <strong>${{ total }}</strong></p>
+        <p>Precio con IVA: <strong>${{ total|floatformat:2 }} USD</strong></p>
 
         <form method="post">
             {% csrf_token %}
