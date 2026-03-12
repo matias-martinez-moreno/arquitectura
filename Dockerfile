@@ -1,20 +1,31 @@
-# 1. Usamos una imagen base oficial de Python ligera
+# Imagen base
 FROM python:3.11-slim
 
-# 2. Evitamos que Python escriba archivos .pyc y buffer de logs
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Variables de entorno
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# 3. Establecemos el directorio de trabajo dentro del contenedor
+# Directorio de trabajo
 WORKDIR /app
 
-# 4. Copiamos los requerimientos e instalamos dependencias
+# Instalar dependencias del sistema necesarias para mysqlclient
+RUN apt-get update && apt-get install -y \
+    gcc \
+    default-libmysqlclient-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements
 COPY requirements.txt /app/
+
+# Instalar dependencias python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 5. Copiamos el resto del codigo fuente
+# Copiar proyecto
 COPY . /app/
 
-# 6. Comando por defecto al iniciar el contenedor
-# Escucha en el puerto 8000 disponible para el mundo (0.0.0.0)
+# Exponer puerto
+EXPOSE 8000
+
+# Ejecutar Django
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
