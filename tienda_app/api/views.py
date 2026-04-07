@@ -2,10 +2,20 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from tienda_app.models import Libro
 from tienda_app.infra.factories import PaymentFactory
 from tienda_app.services import CompraService
 
-from .serializers import OrdenInputSerializer
+from .serializers import LibroSerializer, OrdenInputSerializer
+
+
+class ProductosAPIView(APIView):
+    """Endpoint v1 para coexistencia: lista productos del monolito Django."""
+
+    def get(self, request):
+        libros = Libro.objects.all().order_by('id')
+        serializer = LibroSerializer(libros, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CompraAPIView(APIView):
